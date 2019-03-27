@@ -1,14 +1,22 @@
 package com.imooc.sell.service.impl;
 
 import com.imooc.sell.dao.ProductInfoDao;
+import com.imooc.sell.dto.CartDto;
+import com.imooc.sell.dto.OrderMasterDto;
+import com.imooc.sell.entity.OrderMaster;
 import com.imooc.sell.entity.ProductInfo;
 import com.imooc.sell.enums.ProductStatusEnum;
+import com.imooc.sell.enums.ResultEnum;
+import com.imooc.sell.exception.SellException;
 import com.imooc.sell.service.IProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
+import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ProductServiceImpl implements IProductService {
@@ -32,5 +40,28 @@ public class ProductServiceImpl implements IProductService {
     @Override
     public ProductInfo save(ProductInfo productInfo) {
         return productInfoDao.save(productInfo);
+    }
+
+    @Override
+    public void increaseStock(List<CartDto> cartDtoList) {
+
+    }
+
+    @Override
+    @Transactional
+    public void decreaseStock(List<CartDto> cartDtoList) {
+        for (CartDto cartDto : cartDtoList) {
+            ProductInfo productInfo = productInfoDao.findById(cartDto.getProductId()).get();
+            if(productInfo==null){
+                throw new SellException(ResultEnum.PRODUCT_NOT_EXIT);
+            }
+            Integer stock=productInfo.getProductStock()-cartDto.getProductQuantity();
+            if(stock<0){
+                throw new SellException(ResultEnum.PRODUCT_NOT_EXIT);
+            }
+
+            productInfo.setProductStock(stock);
+            productInfoDao.save(productInfo);
+        }
     }
 }

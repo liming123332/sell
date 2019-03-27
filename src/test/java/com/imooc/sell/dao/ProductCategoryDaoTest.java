@@ -24,8 +24,9 @@ public class ProductCategoryDaoTest {
     }
     @Test
     public void inserTest(){
-        ProductCategory productCategory = productCategoryDao.findById(2).get();
-        productCategory.setCategoryType(10);
+        ProductCategory productCategory = new ProductCategory();
+        productCategory.setCategoryName("女生最爱");
+        productCategory.setCategoryType(2);
         productCategoryDao.save(productCategory);
     }
 
