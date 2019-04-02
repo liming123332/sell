@@ -25,7 +25,7 @@ public class OrderServiceImplTest {
     @Autowired
     private IOrderService orderService;
 
-    private final String buyerOpenId="110110";
+    private final String buyerOpenId="ew3euwhd7sjw9diwkq";
     @Test
     public void create() {
         OrderMasterDto orderMasterDto=new OrderMasterDto();
@@ -61,4 +61,26 @@ public class OrderServiceImplTest {
         log.info("内容 masterDtoList{}", masterDtoList);
 
     }
+
+    @Test
+    public void cancelOrder(){
+        OrderMasterDto dto = orderService.findOne("1553604473052891456");
+        OrderMasterDto result = orderService.cancel(dto);
+        log.info("result={}",result);
+    }
+
+    @Test
+    public void finish(){
+        OrderMasterDto dto = orderService.findOne("1553604473052891456");
+        OrderMasterDto result = orderService.finish(dto);
+        log.info("result={}", result);
+    }
+
+    @Test
+    public void paid(){
+        OrderMasterDto dto = orderService.findOne("1553604473052891456");
+        OrderMasterDto result = orderService.paid(dto);
+        log.info("result={}", result);
+    }
+
 }

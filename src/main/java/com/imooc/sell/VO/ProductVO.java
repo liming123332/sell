@@ -8,7 +8,7 @@ import java.util.List;
 /**
  *  商品(包含类目)
  *  用于给前端展示使用
- * @param <T>
+ * @param
  */
 @Data
 public class ProductVO {

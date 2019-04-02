@@ -43,8 +43,17 @@ public class ProductServiceImpl implements IProductService {
     }
 
     @Override
+    @Transactional
     public void increaseStock(List<CartDto> cartDtoList) {
-
+        for(CartDto cartDto : cartDtoList){
+            ProductInfo productInfo = productInfoDao.findById(cartDto.getProductId()).get();
+            if(productInfo==null){
+                throw new SellException(ResultEnum.PRODUCT_NOT_EXIT);
+            }
+            Integer stock=productInfo.getProductStock()+cartDto.getProductQuantity();
+            productInfo.setProductStock(stock);
+            productInfoDao.save(productInfo);
+        }
     }
 
     @Override
