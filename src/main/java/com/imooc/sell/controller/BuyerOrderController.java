@@ -36,6 +36,9 @@ public class BuyerOrderController {
     @Autowired
     private IOrderService orderService;
 
+    @Autowired
+    private IBuyerService buyerService;
+
     //创建订单
     @PostMapping("/create")
     public ResultVO<Map<String,String>> create(@Valid OrderForm orderForm, BindingResult bindingResult){
@@ -72,7 +75,7 @@ public class BuyerOrderController {
 
 
     //订单列表
-    @GetMapping("list")
+    @GetMapping("/list")
     public ResultVO<List<OrderMasterDto>> list(@RequestParam("openid") String openid,
                                                @RequestParam(value = "page",defaultValue = "0") Integer page,
                                                @RequestParam(value = "size",defaultValue = "10") Integer size){
@@ -91,16 +94,14 @@ public class BuyerOrderController {
     public ResultVO<OrderMasterDto> detail(@RequestParam String openid,
                                            @RequestParam String orderId){
         //TODO 不安全的做法
-        OrderMasterDto orderMasterDto = orderService.findOne(orderId);
+        OrderMasterDto orderMasterDto = buyerService.findOrderOne(openid, orderId);
         return ResultVOUtil.success(orderMasterDto);
     }
     //订单取消
     @PostMapping("/cancel")
     public ResultVO cancel(@RequestParam String openid,
                            @RequestParam String orderId){
-        //TODO 不安全有待改进
-        OrderMasterDto orderMasterDto = orderService.findOne(orderId);
-        orderService.cancel(orderMasterDto);
+        buyerService.cancelOrder(openid, orderId);
         return ResultVOUtil.success();
     }
 
